@@ -30,7 +30,6 @@ def build_text_model(
 
     return tf.keras.Model(inputs=[input_ids, attention_mask], outputs=logits)
 
-
 if __name__ == "__main__":
     print("📝 Building text model...")
     model = build_text_model(pretrained_name="distilbert-base-uncased", num_labels=23)
