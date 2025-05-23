@@ -1,64 +1,72 @@
+
+
+
+# src/models/multimodal_model.py
+
 import tensorflow as tf
 from tensorflow.keras import layers, Model
 from src.models.image_model import build_image_model
-
-# Safe dummy BERT-like model that connects both inputs
-def build_dummy_text_model(seq_len=128, hidden_size=768):
-    input_ids = tf.keras.Input(shape=(seq_len,), dtype=tf.int32, name="input_ids")
-    attention_mask = tf.keras.Input(shape=(seq_len,), dtype=tf.int32, name="attention_mask")
-
-    x = layers.Embedding(input_dim=30522, output_dim=hidden_size)(input_ids)
-
-    # Wrap all raw TF logic inside a Lambda
-    def masked_average(inputs):
-        x, mask = inputs
-        mask = tf.cast(tf.expand_dims(mask, -1), tf.float32)
-        x = x * mask
-        return tf.reduce_sum(x, axis=1) / (tf.reduce_sum(mask, axis=1) + 1e-9)
-
-    x = layers.Lambda(masked_average, name="text_masked_avg")([x, attention_mask])
-
-    return tf.keras.Model(inputs=[input_ids, attention_mask], outputs=x, name="dummy_text_model")
+from src.models.text_model  import build_text_model
 
 def build_multimodal_model(
-    image_model: Model,
-    text_model:  Model,
-    metadata_dim: int,
-    num_classes:  int,
-    dropout:      float = 0.3
-) -> Model:
-    # image branch
-    img_in    = image_model.input
-    img_feats = image_model.output
+    image_input_shape: tuple = (224,224,3),
+    num_image_classes:  int   = 6,
+    text_pretrained:    str   = "distilbert-base-uncased",
+    num_text_labels:    int   = 23,
+    max_seq_len:        int   = 256,
+    metadata_dim:       int   = 10,
+    num_classes:        int   = 6,
+    dropout:            float = 0.3,
+) -> tf.keras.Model:
+    """
+    Builds a fusion of:
+      • EfficientNet-B0 image_model
+      • DistilBERT text_model
+      • Dense metadata branch
+    """
+    # 1) sub-models
+    img_model = build_image_model(
+        input_shape=image_input_shape,
+        num_classes=num_image_classes,
+        dropout=dropout
+    )
+    txt_model = build_text_model(
+        pretrained_name=text_pretrained,
+        num_labels=num_text_labels,
+        max_seq_len=max_seq_len,
+        dropout=dropout
+    )
 
-    # text branch
-    txt_inputs = text_model.input               # [input_ids, attention_mask]
-    txt_feats  = text_model.output
+    # 2) inputs & embeddings
+    img_in, img_feats   = img_model.input,  img_model.output
+    txt_in_ids, txt_in_mask = txt_model.input
+    txt_feats           = txt_model.output
 
-    # metadata branch
     meta_in = layers.Input((metadata_dim,), name="meta_input")
     m = layers.Dense(64, activation="relu")(meta_in)
     m = layers.Dense(32, activation="relu")(m)
 
-    # fuse
+    # 3) fuse & head
     x = layers.Concatenate()([img_feats, txt_feats, m])
     x = layers.Dropout(dropout)(x)
     out = layers.Dense(num_classes, activation="softmax", name="multimodal_output")(x)
 
-    return Model(inputs=[img_in, *txt_inputs, meta_in], outputs=out, name="multimodal_model")
+    return Model(
+        inputs=[img_in, txt_in_ids, txt_in_mask, meta_in],
+        outputs=out,
+        name="multimodal_model"
+    )
 
-
-# ─── Self-test CLI ─────────────────────────────────────────────────────
 if __name__ == "__main__":
-    print("🤖 Building multimodal_model with dummy text model…")
-
-    img_m = build_image_model(input_shape=(224, 224, 3), num_classes=6)
-    txt_m = build_dummy_text_model(seq_len=128, hidden_size=768)
-
+    # quick self-test
     mm = build_multimodal_model(
-        image_model=img_m,
-        text_model=txt_m,
+        image_input_shape=(224,224,3),
+        num_image_classes=6,
+        text_pretrained="distilbert-base-uncased",
+        num_text_labels=23,
+        max_seq_len=128,
         metadata_dim=10,
-        num_classes=6
+        num_classes=6,
+        dropout=0.3
     )
     mm.summary()
