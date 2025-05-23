@@ -1,0 +1,20 @@
+[
+  "age",
+  "diameter_1",
+  "diameter_2",
+  "gender_M",
+  "region_ABDOMEN",
+  "region_ARM",
+  "region_BACK",
+  "region_CHEST",
+  "region_EAR",
+  "region_FACE",
+  "region_FOOT",
+  "region_FOREARM",
+  "region_HAND",
+  "region_LIP",
+  "region_NECK",
+  "region_NOSE",
+  "region_SCALP",
+  "region_THIGH"
+]
