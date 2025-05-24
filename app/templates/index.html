@@ -1,1 +1,122 @@
-<!-- index.html placeholder -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AllerGenie Multimodal Demo</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <h1>AllerGenie Multimodal Inference</h1>
+
+  <label>📁 Upload lesion image:
+    <input type="file" id="imgInput" accept="image/*" />
+  </label>
+
+  <label>✍️ Describe your symptoms:
+    <textarea id="symptomText" rows="3" placeholder="e.g. 'I have had a red, itchy patch on my arm…'"></textarea>
+  </label> -->
+<!-- 
+  <fieldset>
+    <legend>Enter metadata values (leave blank = 0)</legend>
+    <label>Age: <input type="number" step="0.1" id="age" /></label>
+    <label>Diameter 1 (mm): <input type="number" step="0.1" id="diameter_1" /></label>
+    <label>Diameter 2 (mm): <input type="number" step="0.1" id="diameter_2" /></label>
+    <label>Gender:
+      <select id="gender_M">
+        <option value="0">Female</option>
+        <option value="1">Male</option>
+      </select>
+    </label>
+
+    <p>Region:</p>
+    <div class="regions">
+      <!-- repeat for each region -->
+      <!-- <label><input type="radio" name="region" value="region_ARM"/> Arm</label>
+      <!-- … other regions … -->
+    <!-- </div>
+  </fieldset> --> -->
+ -->
+  <!-- <button id="submitBtn">🩺 Submit for Diagnosis</button>
+
+  <div id="results" hidden>
+    <h2>Results</h2>
+    <p id="diagnosis"></p>
+    <p id="confidence"></p>
+    <p id="followup"></p>
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AllerGenie Multimodal Demo</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <h1>AllerGenie Multimodal Inference</h1>
+
+  <div class="block">
+    <label>📁 Upload lesion image:
+      <input type="file" id="imgInput" accept="image/*" />
+    </label>
+  </div>
+
+  <div class="block">
+    <label>✍️ Describe your symptoms:</label>
+    <textarea id="symptomText" rows="4" placeholder="e.g. I have had a red, itchy patch…"></textarea>
+  </div>
+
+  <fieldset class="block">
+    <legend>Enter metadata (leave blank = 0)</legend>
+    <div class="row">
+      <label>Age: <input type="number" step="0.1" id="age" /></label>
+      <label>Diameter 1 (mm): <input type="number" step="0.1" id="diameter_1" /></label>
+      <label>Diameter 2 (mm): <input type="number" step="0.1" id="diameter_2" /></label>
+      <label>Gender:
+        <select id="gender_M">
+          <option value="0">Female</option>
+          <option value="1">Male</option>
+        </select>
+      </label>
+    </div>
+
+    <p>Region (you can select multiple):</p>
+    <div class="regions">
+      <label><input type="checkbox" name="region" value="region_ABDOMEN"/> Abdomen</label>
+      <label><input type="checkbox" name="region" value="region_ARM"/> Arm</label>
+      <label><input type="checkbox" name="region" value="region_BACK"/> Back</label>
+      <label><input type="checkbox" name="region" value="region_CHEST"/> Chest</label>
+      <label><input type="checkbox" name="region" value="region_EAR"/> Ear</label>
+      <label><input type="checkbox" name="region" value="region_FACE"/> Face</label>
+      <label><input type="checkbox" name="region" value="region_FOOT"/> Foot</label>
+      <label><input type="checkbox" name="region" value="region_FOREARM"/> Forearm</label>
+      <label><input type="checkbox" name="region" value="region_HAND"/> Hand</label>
+      <label><input type="checkbox" name="region" value="region_LIP"/> Lip</label>
+      <label><input type="checkbox" name="region" value="region_NECK"/> Neck</label>
+      <label><input type="checkbox" name="region" value="region_NOSE"/> Nose</label>
+      <label><input type="checkbox" name="region" value="region_SCALP"/> Scalp</label>
+      <label><input type="checkbox" name="region" value="region_THIGH"/> Thigh</label>
+    </div>
+  </fieldset>
+
+  <button id="submitBtn">🩺 Submit for Diagnosis</button>
+
+  <div id="results" class="block" hidden>
+    <h2>Results</h2>
+    <p id="diagnosis"></p>
+    <p id="confidence"></p>
+    <p id="followupQuestion"></p>
+
+    <!-- new follow-up answer area -->
+    <div id="followupAnswerBlock" hidden>
+      <textarea id="followupAnswer" rows="3" placeholder="Your answer…"></textarea>
+      <button id="submitFollowup">Submit Follow-up</button>
+    </div>
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>

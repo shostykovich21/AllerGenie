@@ -1,1 +1,34 @@
-/* style.css placeholder */
+body {
+  font-family: sans-serif;
+  max-width: 800px;
+  margin: 2em auto;
+  line-height: 1.4;
+}
+h1, h2 {
+  margin-bottom: 0.5em;
+}
+.block {
+  margin-bottom: 1.5em;
+}
+.row {
+  display: flex;
+  gap: 1em;
+  flex-wrap: wrap;
+}
+label {
+  display: block;
+  margin-bottom: 0.5em;
+}
+textarea, input, select, button {
+  font-size: 1em;
+}
+.regions {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.5em;
+}
+#results {
+  padding: 1em;
+  border: 1px solid #ccc;
+  background: #fafafa;
+}
